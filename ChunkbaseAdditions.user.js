@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Chunkbase Additions
+// @name         Better Chunkbase
 // @version      0.1
 // @description  try to take over the world!
 // @author       ericsson
@@ -8,12 +8,60 @@
 // @run-at       document-idle
 // ==/UserScript==
 
-let s = document.querySelector("div.fancy-row.slim")
-s.insertAdjacentHTML('afterbegin', '<input type="text" class="mini" id="popa" name="popa" placeholder="F3 + C">');
+console.log("======================== Start ========================")
 
-document.getElementById("popa").addEventListener("input", function (e) {
-    useRegex(this.value)
+
+
+// Copy buttons
+
+const elementToObserve = document.querySelector("div#seed-controls");
+
+const observer = new MutationObserver(function(mutationsList, observer) {
+    let d = document.querySelector("div.tippy-content")
+
+    if (typeof(d) != 'undefined' && d != null) {
+        if(!d.textContent.includes('<br><button id="kaka" class="gh-button"> TP </button>')) {
+            d.insertAdjacentHTML('beforeend', '<br><button id="kaka" class="gh-button"> TP </button>');
+            document.getElementById("kaka").addEventListener(
+                "click", copy, false
+            );
+            d.insertAdjacentHTML('beforeend', ' <button id="kakashrt" class="gh-button"> Coords </button>');
+            document.getElementById("kakashrt").addEventListener(
+                "click", copyshrt, false
+            );
+        }
+    }
 });
+
+observer.observe(elementToObserve, {characterData: false, childList: true, attributes: false});
+
+function useRegex2(shrt) {
+    let d = document.querySelector("div.tippy-content")
+    var matches = [];
+    let regex = /X: ([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))? Z: ([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))?/i;
+    var re = new RegExp(regex, "g");
+    if (!shrt) {
+        while(matches = re.exec(d.innerHTML)) {
+            return "/execute in minecraft:overworld run tp @s " + matches[1] + " ~ " + matches[3];
+        }
+    } else {
+        while(matches = re.exec(d.innerHTML)) {
+            return matches[1] + " " + matches[3];
+        }
+    }
+}
+
+function copy() {
+    console.log(navigator.clipboard.writeText(useRegex2(false)));
+}
+function copyshrt() {
+    console.log(navigator.clipboard.writeText(useRegex2(true)));
+}
+
+
+
+// F3 + C
+
 function useRegex(input) {
     var matches = [];
     let regex = /\/execute in minecraft:[0-9A-Za-z]+ run tp @s ([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))? ([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))? ([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))? -([0-9]*\.[0-9]+( [0-9]*\.[0-9]+)+)/i;
@@ -26,3 +74,10 @@ function useRegex(input) {
         document.getElementById("map-goto-go").click();
     }
 }
+
+let s = document.querySelector("div.fancy-row.slim")
+s.insertAdjacentHTML('afterbegin', '<input type="text" class="mini" id="popa" name="popa" placeholder="F3 + C">');
+
+document.getElementById("popa").addEventListener("input", function (e) {
+    useRegex(this.value)
+});
