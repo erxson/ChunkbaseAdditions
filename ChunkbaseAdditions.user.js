@@ -42,14 +42,14 @@ waitForElm("div#seed-controls").then((elm) => {
 function useRegex2(shrt) {
     const d = document.querySelector("div.tippy-content")
     var matches = [];
-    const regex = /X: ([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))? Z: ([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))?/i;
+    let regex = /X: ([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))? Z: ([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))?/;
     var re = new RegExp(regex, "g");
     if (!shrt) {
-        while(matches = re.exec(d.innerHTML)) {
+        while(matches = re.exec(d.innerHTML.replace(/\,/g, ''))) {
             return "/execute in minecraft:" + document.getElementById("biome-dimension-select").value + " run tp @s " + matches[1] + " 100 " + matches[3];
         }
     } else {
-        while(matches = re.exec(d.innerHTML)) {
+        while(matches = re.exec(d.innerHTML.replace(/\,/g, ''))) {
             return matches[1] + " " + matches[3];
         }
     }
@@ -102,6 +102,6 @@ waitForElm("div.fancy-row.slim").then((elm) => {
     const s = document.querySelector("div.fancy-row.slim")
     s.insertAdjacentHTML('afterbegin', '<input type="text" class="mini" id="popa" name="popa" placeholder="F3 + C">');
     document.getElementById("popa").addEventListener("input", function (e) {
-    useRegex(this.value)
-});
+        useRegex(this.value)
+    });
 });
