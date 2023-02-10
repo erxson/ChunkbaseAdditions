@@ -46,7 +46,7 @@ function useRegex2(shrt) {
     var re = new RegExp(regex, "g");
     if (!shrt) {
         while(matches = re.exec(d.innerHTML)) {
-            return "/execute in minecraft:overworld run tp @s " + matches[1] + " ~ " + matches[3];
+            return "/execute in minecraft:" + document.getElementById("biome-dimension-select").value + " run tp @s " + matches[1] + " 100 " + matches[3];
         }
     } else {
         while(matches = re.exec(d.innerHTML)) {
@@ -88,13 +88,12 @@ function copyshrt() {
 
 function useRegex(input) {
     var matches = [];
-    const regex = /\/execute in minecraft:[0-9A-Za-z]+ run tp @s ([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))? ([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))? ([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))? -([0-9]*\.[0-9]+( [0-9]*\.[0-9]+)+)/i;
+    let regex = /minecraft:([A-Za-z]+) run tp @s ([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))? ([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))? ([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))?/i;
     var re = new RegExp(regex, "g");
     while(matches = re.exec(input)) {
-        console.log(Math.round(matches[1]))
-        document.getElementById("map-goto-x").value = Math.round(matches[1])
-        console.log(Math.round(matches[5]))
-        document.getElementById("map-goto-z").value = Math.round(matches[5])
+        console.log("Dimension: " + matches[1] + " X: " + Math.round(matches[2]) + " Y: " + Math.round(matches[6]));
+        document.getElementById("map-goto-x").value = Math.round(matches[2])
+        document.getElementById("map-goto-z").value = Math.round(matches[6])
         document.getElementById("map-goto-go").click();
     }
 }
